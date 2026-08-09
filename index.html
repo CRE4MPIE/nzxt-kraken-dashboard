@@ -200,14 +200,7 @@
         left: 159px;
         top: 100px;
 
-        background:
-            linear-gradient(
-                to bottom,
-                transparent,
-                rgba(240,245,255,.95) 15%,
-                rgba(240,245,255,.95) 85%,
-                transparent
-            );
+        background: rgba(240,245,255,.95);
 
         transform: none;
         transform-origin: center;
@@ -330,7 +323,7 @@
 <div id="screen">
 
     <!-- Static blue-to-purple gradient arc with reference-style bottom gap -->
-    <svg class="ring" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="translate: 0px; font-weight: 400;">
+    <svg class="ring" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="">
 
         <defs>
             <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
@@ -355,23 +348,23 @@
 
     <div class="innerGlow" style=""></div>
 
-    <div class="brand" style="font-size: 32px; translate: -1.19992px 14px;">
+    <div class="brand" style="translate: 2px 11.2px; font-size: 30px;">
         NZXT
     </div>
 
-    <div class="metrics" style="">
+    <div class="metrics" style="translate: 0.800003px 2.8px;">
 
         <!-- CPU -->
 
         <div class="metric" style="">
 
-            <div class="label" style="translate: 4.40005px 2px;">
+            <div class="label" style="translate: 10.4px 0.400002px;">
                 CPU
             </div>
 
-            <div id="cpuTemp" class="temperature" style="translate: 10px 2.8px; font-size: 55px;">59<span class="degree" style="">°</span></div>
+            <div id="cpuTemp" class="temperature" style="font-size: 55px; translate: 13.2px 1.59999px;">59<span class="degree" style="">°</span></div>
 
-            <div id="cpuLoad" class="usage" style="translate: 2px;">7%</div>
+            <div id="cpuLoad" class="usage" style="translate: 9.2px 1.20004px; font-size: 26px;">7%</div>
 
         </div>
 
@@ -380,20 +373,20 @@
 
         <div class="metric" style="">
 
-            <div class="label" style="translate: -8.80005px 2px;">
+            <div class="label" style="translate: -8.8px 2.39999px;">
                 GPU
             </div>
 
-            <div id="gpuTemp" class="temperature" style="translate: -8.79994px 4.39998px; font-size: 55px; font-weight: 800;">34<span class="degree" style="">°</span></div>
+            <div id="gpuTemp" class="temperature" style="font-size: 55px; translate: -6.80003px 3.19997px;">34<span class="degree" style="">°</span></div>
 
-            <div id="gpuLoad" class="usage" style="translate: -9.59995px;">10%</div>
+            <div id="gpuLoad" class="usage" style="translate: -10px; font-size: 26px;">10%</div>
 
         </div>
 
     </div>
 
 
-    <div class="divider" style=""></div>
+    <div class="divider" style="background: rgba(240, 245, 255, 0.95); width: 3px;"></div>
 
 
     <div class="power" style="">
@@ -402,7 +395,7 @@
             Power
         </div>
 
-        <div id="power" class="power-value" style="translate: -1.2px -3.19998px; font-size: 25px;">161W</div>
+        <div id="power" class="power-value" style="translate: 1.2px -1.19998px; font-size: 25px;">161W</div>
 
     </div>
 
