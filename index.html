@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=320, height=320, initial-scale=1.0">
+<title>NZXT Kraken Dashboard</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html,
+    body {
+        width: 320px;
+        height: 320px;
+        overflow: hidden;
+        background: #000;
+    }
+
+    body {
+        font-family:
+            "Segoe UI",
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        color: #f4f7ff;
+        background:
+            radial-gradient(
+                circle at 50% 45%,
+                rgba(20, 20, 30, 0.45),
+                #000 65%
+            );
+    }
+
+    #screen {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+
+    /* ----------------------------------------
+       Animated circular border
+       ---------------------------------------- */
+
+    .ring {
+        position: absolute;
+        inset: 0;
+        width: 320px;
+        height: 320px;
+        transform: rotate(-28deg);
+    }
+
+    .ring-track {
+        fill: none;
+        stroke: rgba(20, 35, 80, 0.18);
+        stroke-width: 8;
+    }
+
+    .ring-glow {
+        fill: none;
+        stroke: url(#gradient);
+        stroke-width: 8;
+        stroke-linecap: round;
+
+        stroke-dasharray: 840 100;
+        animation: ringMove 5s linear infinite;
+
+        filter:
+            drop-shadow(0 0 3px rgba(0, 150, 255, .7))
+            drop-shadow(0 0 8px rgba(100, 60, 255, .4));
+    }
+
+    @keyframes ringMove {
+        from {
+            stroke-dashoffset: 0;
+        }
+
+        to {
+            stroke-dashoffset: -940;
+        }
+    }
+
+    /* ----------------------------------------
+       Subtle interior glow
+       ---------------------------------------- */
+
+    .innerGlow {
+        position: absolute;
+        width: 230px;
+        height: 230px;
+        left: 45px;
+        top: 45px;
+
+        border-radius: 50%;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(20, 50, 100, 0.08),
+                transparent 68%
+            );
+
+        pointer-events: none;
+    }
+
+    /* ----------------------------------------
+       NZXT logo
+       ---------------------------------------- */
+
+    .brand {
+        position: absolute;
+        top: 47px;
+        left: 0;
+        width: 100%;
+
+        text-align: center;
+
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 1px;
+
+        color: #e9edfa;
+    }
+
+    /* ----------------------------------------
+       Main layout
+       ---------------------------------------- */
+
+    .metrics {
+        position: absolute;
+        left: 0;
+        top: 92px;
+
+        width: 320px;
+        height: 145px;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .metric {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .label {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .3px;
+
+        color: #e8ebf4;
+        margin-bottom: 2px;
+    }
+
+    .temperature {
+        font-size: 52px;
+        line-height: 52px;
+
+        font-weight: 800;
+        letter-spacing: -3px;
+
+        color: #edf1fa;
+
+        text-shadow:
+            0 0 5px rgba(255,255,255,.08);
+    }
+
+    .degree {
+        font-size: 26px;
+        vertical-align: top;
+
+        margin-left: 2px;
+        letter-spacing: 0;
+    }
+
+    .usage {
+        margin-top: 4px;
+
+        font-size: 24px;
+        line-height: 25px;
+
+        font-weight: 600;
+        letter-spacing: -1px;
+
+        color: #e9edf8;
+    }
+
+    /* ----------------------------------------
+       Center divider
+       ---------------------------------------- */
+
+    .divider {
+        position: absolute;
+
+        width: 2px;
+        height: 112px;
+
+        left: 159px;
+        top: 108px;
+
+        background:
+            linear-gradient(
+                to bottom,
+                transparent,
+                rgba(240,245,255,.95) 15%,
+                rgba(240,245,255,.95) 85%,
+                transparent
+            );
+
+        transform: rotate(24deg);
+        transform-origin: center;
+    }
+
+    /* ----------------------------------------
+       Power
+       ---------------------------------------- */
+
+    .power {
+        position: absolute;
+
+        left: 0;
+        bottom: 51px;
+
+        width: 100%;
+
+        text-align: center;
+    }
+
+    .power-label {
+        font-size: 14px;
+        font-weight: 700;
+
+        color: #e5e9f4;
+
+        margin-bottom: 1px;
+    }
+
+    .power-value {
+        font-size: 22px;
+        line-height: 24px;
+
+        font-weight: 700;
+
+        color: #e5e9f4;
+    }
+
+    /* ----------------------------------------
+       Loading / disconnected indicator
+       ---------------------------------------- */
+
+    .status {
+        position: absolute;
+
+        left: 0;
+        bottom: 28px;
+
+        width: 100%;
+
+        text-align: center;
+
+        font-size: 7px;
+        letter-spacing: 1px;
+
+        color: rgba(180,190,215,.35);
+
+        text-transform: uppercase;
+    }
+
+    /* ----------------------------------------
+       Temperature colors
+       ---------------------------------------- */
+
+    .warm {
+        color: #ffd66b;
+    }
+
+    .hot {
+        color: #ff756d;
+    }
+
+    /* ----------------------------------------
+       Browser preview controls
+       ---------------------------------------- */
+
+    #previewNotice {
+        display: none;
+    }
+
+    /*
+       CAM provides the real dimensions. This page is intentionally
+       locked to the Z-series 320x320 display.
+    */
+</style>
+</head>
+
+<body>
+
+<div id="screen">
+
+    <!-- Circular animated border -->
+    <svg class="ring"
+         viewBox="0 0 320 320"
+         xmlns="http://www.w3.org/2000/svg">
+
+        <defs>
+            <linearGradient
+                id="gradient"
+                x1="0%"
+                y1="100%"
+                x2="100%"
+                y2="0%">
+
+                <stop offset="0%"
+                      stop-color="#006cff"/>
+
+                <stop offset="42%"
+                      stop-color="#008cff"/>
+
+                <stop offset="72%"
+                      stop-color="#7b3cff"/>
+
+                <stop offset="100%"
+                      stop-color="#b33cff"/>
+            </linearGradient>
+        </defs>
+
+        <circle
+            class="ring-track"
+            cx="160"
+            cy="160"
+            r="145" />
+
+        <circle
+            class="ring-glow"
+            cx="160"
+            cy="160"
+            r="145" />
+
+    </svg>
+
+    <div class="innerGlow"></div>
+
+    <div class="brand">
+        NZXT
+    </div>
+
+    <div class="metrics">
+
+        <!-- CPU -->
+
+        <div class="metric">
+
+            <div class="label">
+                CPU
+            </div>
+
+            <div
+                id="cpuTemp"
+                class="temperature">
+                --<span class="degree">°</span>
+            </div>
+
+            <div
+                id="cpuLoad"
+                class="usage">
+                --%
+            </div>
+
+        </div>
+
+
+        <!-- GPU -->
+
+        <div class="metric">
+
+            <div class="label">
+                GPU
+            </div>
+
+            <div
+                id="gpuTemp"
+                class="temperature">
+                --<span class="degree">°</span>
+            </div>
+
+            <div
+                id="gpuLoad"
+                class="usage">
+                --%
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="divider"></div>
+
+
+    <div class="power">
+
+        <div class="power-label">
+            Power
+        </div>
+
+        <div
+            id="power"
+            class="power-value">
+            --W
+        </div>
+
+    </div>
+
+
+    <div
+        id="status"
+        class="status">
+        Waiting for CAM
+    </div>
+
+</div>
+
+
+<script>
+
+/*
+============================================================
+ NZXT KRAKEN WEB INTEGRATION
+============================================================
+
+ CAM calls:
+
+ window.nzxt.v1.onMonitoringDataUpdate(data)
+
+ approximately once per second.
+
+ We intentionally don't hard-code a single exact monitoring
+ object layout here. The helper functions below tolerate
+ small differences between CAM versions.
+============================================================
+*/
+
+
+// ---------------------------------------------------------
+// DOM
+// ---------------------------------------------------------
+
+const cpuTempElement = document.getElementById("cpuTemp");
+const cpuLoadElement = document.getElementById("cpuLoad");
+
+const gpuTempElement = document.getElementById("gpuTemp");
+const gpuLoadElement = document.getElementById("gpuLoad");
+
+const powerElement = document.getElementById("power");
+const statusElement = document.getElementById("status");
+
+
+// ---------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------
+
+function number(value) {
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+        return value;
+    }
+
+    if (typeof value === "string") {
+
+        const parsed = parseFloat(value);
+
+        if (Number.isFinite(parsed)) {
+            return parsed;
+        }
+    }
+
+    return null;
+}
+
+
+/*
+ Find a metric inside an object using several possible names.
+*/
+
+function findMetric(object, names) {
+
+    if (!object || typeof object !== "object") {
+        return null;
+    }
+
+    for (const name of names) {
+
+        if (Object.prototype.hasOwnProperty.call(object, name)) {
+
+            const value = number(object[name]);
+
+            if (value !== null) {
+                return value;
+            }
+        }
+    }
+
+    return null;
+}
+
+
+/*
+ Recursively search an object for a numeric property.
+
+ Used mainly for power because CAM versions/devices can expose
+ power information in slightly different places.
+*/
+
+function recursiveMetric(object, names, depth = 0) {
+
+    if (!object || typeof object !== "object") {
+        return null;
+    }
+
+    if (depth > 5) {
+        return null;
+    }
+
+    const direct = findMetric(object, names);
+
+    if (direct !== null) {
+        return direct;
+    }
+
+    for (const key of Object.keys(object)) {
+
+        const value = object[key];
+
+        if (value && typeof value === "object") {
+
+            const result =
+                recursiveMetric(value, names, depth + 1);
+
+            if (result !== null) {
+                return result;
+            }
+        }
+    }
+
+    return null;
+}
+
+
+/*
+ Find the first useful component in an array.
+*/
+
+function firstComponent(value) {
+
+    if (Array.isArray(value) && value.length) {
+        return value[0];
+    }
+
+    if (value && typeof value === "object") {
+        return value;
+    }
+
+    return {};
+}
+
+
+/*
+ Clamp a number.
+*/
+
+function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+}
+
+
+// ---------------------------------------------------------
+// Display helpers
+// ---------------------------------------------------------
+
+function setTemperature(element, value) {
+
+    if (value === null) {
+
+        element.innerHTML =
+            '--<span class="degree">°</span>';
+
+        return;
+    }
+
+    const temp = Math.round(value);
+
+    element.innerHTML =
+        `${temp}<span class="degree">°</span>`;
+
+    element.classList.remove("warm", "hot");
+
+    if (temp >= 80) {
+        element.classList.add("hot");
+    }
+    else if (temp >= 65) {
+        element.classList.add("warm");
+    }
+}
+
+
+function setPercent(element, value) {
+
+    if (value === null) {
+        element.textContent = "--%";
+        return;
+    }
+
+    element.textContent =
+        `${Math.round(clamp(value, 0, 100))}%`;
+}
+
+
+function setPower(value) {
+
+    if (value === null) {
+        powerElement.textContent = "--W";
+        return;
+    }
+
+    powerElement.textContent =
+        `${Math.round(value)}W`;
+}
+
+
+// ---------------------------------------------------------
+// Monitoring data
+// ---------------------------------------------------------
+
+function updateMonitoringData(data) {
+
+    if (!data) {
+        return;
+    }
+
+
+    /*
+     --------------------------------------------------------
+     CPU
+     --------------------------------------------------------
+    */
+
+    const cpu = firstComponent(data.cpus);
+
+    const cpuTemperature =
+        findMetric(cpu, [
+            "temperature",
+            "temp",
+            "temperatureC",
+            "temperatureCelsius"
+        ]);
+
+    const cpuLoad =
+        findMetric(cpu, [
+            "load",
+            "usage",
+            "utilization",
+            "loadPercentage",
+            "usagePercentage"
+        ]);
+
+
+    /*
+     --------------------------------------------------------
+     GPU
+     --------------------------------------------------------
+    */
+
+    const gpu = firstComponent(data.gpus);
+
+    const gpuTemperature =
+        findMetric(gpu, [
+            "temperature",
+            "temp",
+            "temperatureC",
+            "temperatureCelsius"
+        ]);
+
+    const gpuLoad =
+        findMetric(gpu, [
+            "load",
+            "usage",
+            "utilization",
+            "loadPercentage",
+            "usagePercentage"
+        ]);
+
+
+    /*
+     --------------------------------------------------------
+     Update display
+     --------------------------------------------------------
+    */
+
+    setTemperature(
+        cpuTempElement,
+        cpuTemperature
+    );
+
+    setPercent(
+        cpuLoadElement,
+        cpuLoad
+    );
+
+
+    setTemperature(
+        gpuTempElement,
+        gpuTemperature
+    );
+
+    setPercent(
+        gpuLoadElement,
+        gpuLoad
+    );
+
+
+    /*
+     --------------------------------------------------------
+     Power
+
+     Prefer a system-level power value if CAM supplies one.
+
+     Otherwise, add CPU + GPU power when both are available.
+     --------------------------------------------------------
+    */
+
+    let totalPower =
+        recursiveMetric(
+            data,
+            [
+                "totalPower",
+                "systemPower",
+                "powerUsage",
+                "powerDraw",
+                "packagePower"
+            ]
+        );
+
+
+    if (totalPower === null) {
+
+        const cpuPower =
+            recursiveMetric(
+                cpu,
+                [
+                    "power",
+                    "powerUsage",
+                    "powerDraw",
+                    "packagePower",
+                    "watts"
+                ]
+            );
+
+        const gpuPower =
+            recursiveMetric(
+                gpu,
+                [
+                    "power",
+                    "powerUsage",
+                    "powerDraw",
+                    "watts"
+                ]
+            );
+
+
+        if (
+            cpuPower !== null &&
+            gpuPower !== null
+        ) {
+
+            totalPower =
+                cpuPower + gpuPower;
+
+        }
+        else if (gpuPower !== null) {
+
+            totalPower = gpuPower;
+
+        }
+        else if (cpuPower !== null) {
+
+            totalPower = cpuPower;
+        }
+    }
+
+
+    setPower(totalPower);
+
+
+    statusElement.textContent =
+        "CAM CONNECTED";
+}
+
+
+// ---------------------------------------------------------
+// NZXT CAM API
+// ---------------------------------------------------------
+
+/*
+ Preserve anything CAM may already have placed on window.nzxt.
+*/
+
+window.nzxt = window.nzxt || {};
+
+window.nzxt.v1 = window.nzxt.v1 || {};
+
+
+/*
+ CAM detects this callback and begins sending monitoring data.
+*/
+
+window.nzxt.v1.onMonitoringDataUpdate =
+    function(data) {
+
+        updateMonitoringData(data);
+
+        /*
+         Uncomment this temporarily if you want to inspect
+         the exact CAM data your PC provides:
+
+         console.log("NZXT CAM DATA:", data);
+        */
+    };
+
+
+// ---------------------------------------------------------
+// Browser preview
+// ---------------------------------------------------------
+
+/*
+ When opened directly in Chrome/Edge, CAM isn't present.
+
+ We therefore show simulated values so the design can be
+ developed without the Kraken connected.
+*/
+
+const isKraken =
+    new URLSearchParams(window.location.search)
+        .get("kraken") === "1";
+
+
+if (!isKraken) {
+
+    let demo = {
+        cpuTemp: 59,
+        cpuLoad: 7,
+
+        gpuTemp: 34,
+        gpuLoad: 10,
+
+        power: 161
+    };
+
+
+    setTemperature(
+        cpuTempElement,
+        demo.cpuTemp
+    );
+
+    setPercent(
+        cpuLoadElement,
+        demo.cpuLoad
+    );
+
+    setTemperature(
+        gpuTempElement,
+        demo.gpuTemp
+    );
+
+    setPercent(
+        gpuLoadElement,
+        demo.gpuLoad
+    );
+
+    setPower(demo.power);
+
+    statusElement.textContent =
+        "BROWSER PREVIEW";
+}
+
+</script>
+
+</body>
+</html>
