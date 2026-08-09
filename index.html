@@ -53,37 +53,29 @@
         inset: 0;
         width: 320px;
         height: 320px;
-        transform: rotate(-28deg);
     }
 
     .ring-track {
         fill: none;
-        stroke: rgba(20, 35, 80, 0.18);
-        stroke-width: 8;
+        stroke: rgba(25, 35, 70, 0.22);
+        stroke-width: 9;
     }
 
     .ring-glow {
         fill: none;
         stroke: url(#gradient);
-        stroke-width: 8;
+        stroke-width: 9;
         stroke-linecap: round;
 
-        stroke-dasharray: 840 100;
-        animation: ringMove 5s linear infinite;
+        /* Reference-style open arc with a centered gap at the bottom. */
+        stroke-dasharray: 760 157;
+        stroke-dashoffset: -78.5;
+        transform: rotate(90deg);
+        transform-origin: 160px 160px;
 
         filter:
-            drop-shadow(0 0 3px rgba(0, 150, 255, .7))
-            drop-shadow(0 0 8px rgba(100, 60, 255, .4));
-    }
-
-    @keyframes ringMove {
-        from {
-            stroke-dashoffset: 0;
-        }
-
-        to {
-            stroke-dashoffset: -940;
-        }
+            drop-shadow(0 0 3px rgba(0, 155, 255, .72))
+            drop-shadow(0 0 8px rgba(115, 55, 255, .46));
     }
 
     /* ----------------------------------------
@@ -115,13 +107,13 @@
 
     .brand {
         position: absolute;
-        top: 47px;
+        top: 35px;
         left: 0;
         width: 100%;
 
         text-align: center;
 
-        font-size: 22px;
+        font-size: 27px;
         font-weight: 800;
         letter-spacing: 1px;
 
@@ -135,13 +127,15 @@
     .metrics {
         position: absolute;
         left: 0;
-        top: 92px;
+        top: 94px;
 
         width: 320px;
-        height: 145px;
+        height: 158px;
+        padding: 0 25px;
 
         display: grid;
         grid-template-columns: 1fr 1fr;
+        column-gap: 16px;
     }
 
     .metric {
@@ -153,7 +147,7 @@
     }
 
     .label {
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 700;
         letter-spacing: .3px;
 
@@ -162,8 +156,8 @@
     }
 
     .temperature {
-        font-size: 52px;
-        line-height: 52px;
+        font-size: 60px;
+        line-height: 60px;
 
         font-weight: 800;
         letter-spacing: -3px;
@@ -175,7 +169,7 @@
     }
 
     .degree {
-        font-size: 26px;
+        font-size: 27px;
         vertical-align: top;
 
         margin-left: 2px;
@@ -183,10 +177,10 @@
     }
 
     .usage {
-        margin-top: 4px;
+        margin-top: 5px;
 
-        font-size: 24px;
-        line-height: 25px;
+        font-size: 28px;
+        line-height: 29px;
 
         font-weight: 600;
         letter-spacing: -1px;
@@ -202,10 +196,10 @@
         position: absolute;
 
         width: 2px;
-        height: 112px;
+        height: 126px;
 
         left: 159px;
-        top: 108px;
+        top: 100px;
 
         background:
             linear-gradient(
@@ -216,8 +210,10 @@
                 transparent
             );
 
-        transform: rotate(24deg);
+        transform: none;
         transform-origin: center;
+
+        box-shadow: 0 0 5px rgba(255,255,255,.16);
     }
 
     /* ----------------------------------------
@@ -228,7 +224,7 @@
         position: absolute;
 
         left: 0;
-        bottom: 51px;
+        bottom: 39px;
 
         width: 100%;
 
@@ -236,7 +232,7 @@
     }
 
     .power-label {
-        font-size: 14px;
+        font-size: 17px;
         font-weight: 700;
 
         color: #e5e9f4;
@@ -245,12 +241,40 @@
     }
 
     .power-value {
-        font-size: 22px;
-        line-height: 24px;
+        font-size: 27px;
+        line-height: 29px;
 
         font-weight: 700;
 
         color: #e5e9f4;
+    }
+
+    /* ----------------------------------------
+       Power draw ring indicator
+       ---------------------------------------- */
+
+    .power-dot {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        left: 153px;
+        top: 7px;
+
+        border-radius: 50%;
+        background: #fff;
+
+        box-shadow:
+            0 0 4px rgba(255,255,255,1),
+            0 0 9px rgba(255,255,255,.9),
+            0 0 16px rgba(180,225,255,.65);
+
+        z-index: 5;
+        pointer-events: none;
+
+        transform-origin: 7px 153px;
+        transform: rotate(-120deg);
+
+        transition: transform .55s ease-out;
     }
 
     /* ----------------------------------------
@@ -261,13 +285,13 @@
         position: absolute;
 
         left: 0;
-        bottom: 28px;
+        bottom: 18px;
 
         width: 100%;
 
         text-align: center;
 
-        font-size: 7px;
+        font-size: 6px;
         letter-spacing: 1px;
 
         color: rgba(180,190,215,.35);
@@ -306,7 +330,7 @@
 
 <div id="screen">
 
-    <!-- Circular animated border -->
+    <!-- Static blue-to-purple gradient arc with reference-style bottom gap -->
     <svg class="ring"
          viewBox="0 0 320 320"
          xmlns="http://www.w3.org/2000/svg">
@@ -315,21 +339,21 @@
             <linearGradient
                 id="gradient"
                 x1="0%"
-                y1="100%"
+                y1="50%"
                 x2="100%"
-                y2="0%">
+                y2="50%">
 
                 <stop offset="0%"
-                      stop-color="#006cff"/>
+                      stop-color="#00a8ff"/>
 
-                <stop offset="42%"
-                      stop-color="#008cff"/>
+                <stop offset="32%"
+                      stop-color="#1478ff"/>
 
-                <stop offset="72%"
-                      stop-color="#7b3cff"/>
+                <stop offset="68%"
+                      stop-color="#6d39ff"/>
 
                 <stop offset="100%"
-                      stop-color="#b33cff"/>
+                      stop-color="#cc35ff"/>
             </linearGradient>
         </defs>
 
@@ -337,15 +361,17 @@
             class="ring-track"
             cx="160"
             cy="160"
-            r="145" />
+            r="146" />
 
         <circle
             class="ring-glow"
             cx="160"
             cy="160"
-            r="145" />
+            r="146" />
 
     </svg>
+
+    <div id="powerDot" class="power-dot"></div>
 
     <div class="innerGlow"></div>
 
@@ -461,6 +487,7 @@ const gpuTempElement = document.getElementById("gpuTemp");
 const gpuLoadElement = document.getElementById("gpuLoad");
 
 const powerElement = document.getElementById("power");
+const powerDotElement = document.getElementById("powerDot");
 const statusElement = document.getElementById("status");
 
 
@@ -628,11 +655,20 @@ function setPower(value) {
 
     if (value === null) {
         powerElement.textContent = "--W";
+        powerDotElement.style.transform = "rotate(-120deg)";
         return;
     }
 
     powerElement.textContent =
         `${Math.round(value)}W`;
+
+    // Move the white glow around the outer ring as power draw rises.
+    // 0W starts upper-left; 500W reaches upper-right across a 240° sweep.
+    const normalizedPower = clamp(value, 0, 500) / 500;
+    const angle = -120 + (normalizedPower * 240);
+
+    powerDotElement.style.transform =
+        `rotate(${angle}deg)`;
 }
 
 
