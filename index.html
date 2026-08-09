@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=320, height=320, initial-scale=1.0">
 <title>NZXT Kraken Dashboard</title>
@@ -331,127 +330,84 @@
 <div id="screen">
 
     <!-- Static blue-to-purple gradient arc with reference-style bottom gap -->
-    <svg class="ring"
-         viewBox="0 0 320 320"
-         xmlns="http://www.w3.org/2000/svg">
+    <svg class="ring" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="translate: 0px; font-weight: 400;">
 
         <defs>
-            <linearGradient
-                id="gradient"
-                x1="0%"
-                y1="50%"
-                x2="100%"
-                y2="50%">
+            <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
 
-                <stop offset="0%"
-                      stop-color="#00a8ff"/>
+                <stop offset="0%" stop-color="#00a8ff"></stop>
 
-                <stop offset="32%"
-                      stop-color="#1478ff"/>
+                <stop offset="32%" stop-color="#1478ff"></stop>
 
-                <stop offset="68%"
-                      stop-color="#6d39ff"/>
+                <stop offset="68%" stop-color="#6d39ff"></stop>
 
-                <stop offset="100%"
-                      stop-color="#cc35ff"/>
+                <stop offset="100%" stop-color="#cc35ff"></stop>
             </linearGradient>
         </defs>
 
-        <circle
-            class="ring-track"
-            cx="160"
-            cy="160"
-            r="146" />
+        <circle class="ring-track" cx="160" cy="160" r="146"></circle>
 
-        <circle
-            class="ring-glow"
-            cx="160"
-            cy="160"
-            r="146" />
+        <circle class="ring-glow" cx="160" cy="160" r="146"></circle>
 
     </svg>
 
-    <div id="powerDot" class="power-dot"></div>
+    <div id="powerDot" class="power-dot" style="transform: rotate(-42.72deg);"></div>
 
-    <div class="innerGlow"></div>
+    <div class="innerGlow" style=""></div>
 
-    <div class="brand">
+    <div class="brand" style="font-size: 32px; translate: -1.19992px 14px;">
         NZXT
     </div>
 
-    <div class="metrics">
+    <div class="metrics" style="">
 
         <!-- CPU -->
 
-        <div class="metric">
+        <div class="metric" style="">
 
-            <div class="label">
+            <div class="label" style="translate: 4.40005px 2px;">
                 CPU
             </div>
 
-            <div
-                id="cpuTemp"
-                class="temperature">
-                --<span class="degree">°</span>
-            </div>
+            <div id="cpuTemp" class="temperature" style="translate: 10px 2.8px; font-size: 55px;">59<span class="degree" style="">°</span></div>
 
-            <div
-                id="cpuLoad"
-                class="usage">
-                --%
-            </div>
+            <div id="cpuLoad" class="usage" style="translate: 2px;">7%</div>
 
         </div>
 
 
         <!-- GPU -->
 
-        <div class="metric">
+        <div class="metric" style="">
 
-            <div class="label">
+            <div class="label" style="translate: -8.80005px 2px;">
                 GPU
             </div>
 
-            <div
-                id="gpuTemp"
-                class="temperature">
-                --<span class="degree">°</span>
-            </div>
+            <div id="gpuTemp" class="temperature" style="translate: -8.79994px 4.39998px; font-size: 55px; font-weight: 800;">34<span class="degree" style="">°</span></div>
 
-            <div
-                id="gpuLoad"
-                class="usage">
-                --%
-            </div>
+            <div id="gpuLoad" class="usage" style="translate: -9.59995px;">10%</div>
 
         </div>
 
     </div>
 
 
-    <div class="divider"></div>
+    <div class="divider" style=""></div>
 
 
-    <div class="power">
+    <div class="power" style="">
 
-        <div class="power-label">
+        <div class="power-label" style="">
             Power
         </div>
 
-        <div
-            id="power"
-            class="power-value">
-            --W
-        </div>
+        <div id="power" class="power-value" style="translate: -1.2px -3.19998px; font-size: 25px;">161W</div>
 
     </div>
 
 
-    <div
-        id="status"
-        class="status">
-        Waiting for CAM
-    </div>
+    
 
 </div>
 
@@ -943,5 +899,5 @@ if (!isKraken) {
 
 </script>
 
-</body>
-</html>
+
+</body></html>
