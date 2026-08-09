@@ -893,4 +893,57 @@ if (!isKraken) {
 </script>
 
 
-</body></html>
+<script id="nzxtBindingRuntime">(function(){
+  function getPath(obj,path){
+    if(path === 'derived.ramUsage') {
+      const used=obj?.ram?.inUse, total=obj?.ram?.totalSize;
+      return (typeof used==='number' && typeof total==='number' && total>0) ? used/total : undefined;
+    }
+    if(path.startsWith('window.')) {
+      const key=path.slice(7);
+      return window.nzxt?.v1?.[key];
+    }
+    return path.split('.').reduce((v,k)=>v==null?undefined:v[k],obj);
+  }
+  function format(value,kind){
+    if(value === undefined || value === null || (typeof value==='number' && !Number.isFinite(value))) return '--';
+    if(kind==='text') return String(value);
+    if(kind==='percent') { let n=Number(value); if(n>=0 && n<=1)n*=100; return Math.round(n)+'%'; }
+    if(kind==='temperature') return Math.round(Number(value))+'°C';
+    if(kind==='mhz') return Math.round(Number(value))+' MHz';
+    if(kind==='rpm') return Math.round(Number(value))+' RPM';
+    if(kind==='watts') return Math.round(Number(value))+' W';
+    if(kind==='mib') return Math.round(Number(value))+' MiB';
+    if(kind==='integer') return String(Math.round(Number(value)));
+    return String(value);
+  }
+  function apply(data){
+    document.querySelectorAll('[data-nzxt-binding]').forEach(el=>{
+      const path=el.getAttribute('data-nzxt-binding');
+      const kind=el.getAttribute('data-nzxt-format')||'text';
+      el.textContent=format(getPath(data,path),kind);
+    });
+  }
+  window.__nzxtApplyBindings=apply;
+  window.nzxt=window.nzxt||{}; window.nzxt.v1=window.nzxt.v1||{};
+  const previous=window.nzxt.v1.onMonitoringDataUpdate;
+  window.nzxt.v1.onMonitoringDataUpdate=function(data){
+    if(typeof previous==='function') previous(data);
+    apply(data);
+  };
+  const isKraken=new URLSearchParams(location.search).get('kraken')==='1';
+  if(!isKraken){
+    const demo={
+      cpus:[{name:'AMD Ryzen 9',manufacturer:'AMD',codeName:'Demo CPU',socket:'AM5',load:.27,numCores:16,numThreads:32,temperature:59,minTemperature:38,maxTemperature:78,frequency:5250,minFrequency:600,maxFrequency:5700,stockFrequency:4200,fanSpeed:1250,minFanSpeed:600,maxFanSpeed:2200,tdp:170,power:82}],
+      gpus:[{name:'GeForce RTX',load:.41,temperature:47,minTemperature:31,maxTemperature:72,frequency:2715,minFrequency:210,maxFrequency:2820,stockFrequency:2505,fanSpeed:980,minFanSpeed:0,maxFanSpeed:3000,power:161}],
+      ram:{totalSize:65536,inUse:23800,modules:[{kind:'DDR5',size:32768,model:'Demo DDR5 Module',frequency:6000,stockFrequency:4800}]},
+      kraken:{liquidTemperature:32}
+    };
+    window.nzxt.v1.width=window.nzxt.v1.width||320;
+    window.nzxt.v1.height=window.nzxt.v1.height||320;
+    window.nzxt.v1.shape=window.nzxt.v1.shape||'circle';
+    window.nzxt.v1.targetFps=window.nzxt.v1.targetFps||30;
+    apply(demo);
+    window.__nzxtEditorDemoData=demo;
+  }
+})();</script></body></html>
