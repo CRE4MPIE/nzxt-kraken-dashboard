@@ -646,8 +646,22 @@ function setPercent(element, value) {
         return;
     }
 
+    /*
+     CAM can expose utilization in either of these formats:
+
+       7      = 7%
+       0.07   = 7%
+
+     Normalize fractional 0..1 values before displaying them.
+    */
+    let percent = value;
+
+    if (percent >= 0 && percent <= 1) {
+        percent *= 100;
+    }
+
     element.textContent =
-        `${Math.round(clamp(value, 0, 100))}%`;
+        `${Math.round(clamp(percent, 0, 100))}%`;
 }
 
 
