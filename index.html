@@ -577,14 +577,6 @@ function setTemperature(element, value) {
     element.innerHTML =
         `${temp}<span class="degree">°</span>`;
 
-    element.classList.remove("warm", "hot");
-
-    if (temp >= 80) {
-        element.classList.add("hot");
-    }
-    else if (temp >= 65) {
-        element.classList.add("warm");
-    }
 }
 
 
