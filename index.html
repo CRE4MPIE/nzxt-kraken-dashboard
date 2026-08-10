@@ -316,14 +316,71 @@
        locked to the Z-series 320x320 display.
     */
 </style>
-</head>
+<style id="kzResizeStyles">
+          #kzResizeOverlay {
+            position: absolute;
+            pointer-events: none;
+            border: 1px dashed rgba(255,255,255,.98);
+            box-shadow: 0 0 0 1px rgba(0,0,0,.35);
+            z-index: 2147483646;
+            display: none;
+          }
+          #kzResizeOverlay .kz-resize-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            margin-left: -6px;
+            margin-top: -6px;
+            background: #fff;
+            border: 2px solid #111;
+            border-radius: 50%;
+            pointer-events: auto;
+            z-index: 2147483647;
+          }
+          #kzResizeOverlay .kz-resize-nw,
+          #kzResizeOverlay .kz-resize-se { cursor: nwse-resize; }
+          #kzResizeOverlay .kz-resize-ne,
+          #kzResizeOverlay .kz-resize-sw { cursor: nesw-resize; }
+          #kzResizeOverlay .kz-resize-n,
+          #kzResizeOverlay .kz-resize-s { cursor: ns-resize; }
+          #kzResizeOverlay .kz-resize-e,
+          #kzResizeOverlay .kz-resize-w { cursor: ew-resize; }
 
-<body>
+          #kzResizeOverlay .kz-rotate-stem {
+            position: absolute;
+            left: 50%;
+            top: -34px;
+            width: 1px;
+            height: 28px;
+            background: rgba(255,255,255,.95);
+            transform: translateX(-50%);
+            pointer-events: none;
+          }
+          #kzResizeOverlay .kz-rotate-handle {
+            position: absolute;
+            left: 50%;
+            top: -46px;
+            width: 18px;
+            height: 18px;
+            margin-left: -9px;
+            margin-top: -9px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #111;
+            cursor: grab;
+            pointer-events: auto;
+            z-index: 2147483647;
+            touch-action: none;
+          }
+          #kzResizeOverlay .kz-rotate-handle:active { cursor: grabbing; }
+        </style></head>
+
+<body style="position: relative;">
 
 <div id="screen">
 
     <!-- Static blue-to-purple gradient arc with reference-style bottom gap -->
-    <svg class="ring" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="">
+    <svg class="ring" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" style="translate: 0px;">
 
         <defs>
             <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
@@ -344,15 +401,15 @@
 
     </svg>
 
-    <div id="powerDot" class="power-dot" style="transform: rotate(-42.72deg);"></div>
+    <div id="powerDot" class="power-dot" style="transform: rotate(-95.85deg); font-size: 18.2363px; width: 20px; height: 20px; overflow: visible; translate: -1px;"></div>
 
-    <div class="innerGlow" style=""></div>
+    
 
     <div class="brand" style="translate: 2px 11.2px; font-size: 30px;">
         NZXT
     </div>
 
-    <div class="metrics" style="translate: 0.800003px 2.8px;">
+    <div class="metrics" style="translate: 0px 10px;">
 
         <!-- CPU -->
 
@@ -364,7 +421,7 @@
 
             <div id="cpuTemp" class="temperature" style="font-size: 55px; translate: 13.2px 1.59999px;">59<span class="degree" style="">°</span></div>
 
-            <div id="cpuLoad" class="usage" style="translate: 9.2px 1.20004px; font-size: 26px;">7%</div>
+            <div id="cpuLoad" class="usage" style="translate: 10px; font-size: 26px;">7%</div>
 
         </div>
 
@@ -373,11 +430,11 @@
 
         <div class="metric" style="">
 
-            <div class="label" style="translate: -8.8px 2.39999px;">
+            <div class="label" style="translate: -10px;">
                 GPU
             </div>
 
-            <div id="gpuTemp" class="temperature" style="font-size: 55px; translate: -6.80003px 3.19997px;">34<span class="degree" style="">°</span></div>
+            <div id="gpuTemp" class="temperature" style="font-size: 55px; translate: -6.80003px 3.19997px;">34<span class="degree" style="translate: 0px -14px; font-size: 25.8683px; line-height: 57.485px; width: 10px; height: 40px; overflow: visible;">°</span></div>
 
             <div id="gpuLoad" class="usage" style="translate: -10px; font-size: 26px;">10%</div>
 
@@ -386,7 +443,7 @@
     </div>
 
 
-    <div class="divider" style="background: rgba(240, 245, 255, 0.95); width: 3px; height: 100px; translate: 2.39995px 7.2px;"></div>
+    <div class="divider" style="background: rgba(240, 245, 255, 0.95); width: 3px; height: 100px; translate: 1px 12px;"></div>
 
 
     <div class="power" style="">
@@ -402,7 +459,7 @@
 
     
 
-</div>
+<div data-kz-shape="box" data-kz-added="1" data-kz-added-name="NZXT Box" style="position: absolute; left: 110px; top: 110px; z-index: 31; font-family: &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 5.616px; font-weight: 700; color: rgb(238, 242, 255); white-space: nowrap; width: 120px; height: 40px; background: transparent; border: 3px solid rgb(238, 242, 255); overflow: visible; translate: -8px -63px;"></div></div>
 
 
 <script>
@@ -885,4 +942,57 @@ if (!isKraken) {
 </script>
 
 
-</body></html>
+<script id="nzxtBindingRuntime">(function(){
+  function getPath(obj,path){
+    if(path === 'derived.ramUsage') {
+      const used=obj?.ram?.inUse, total=obj?.ram?.totalSize;
+      return (typeof used==='number' && typeof total==='number' && total>0) ? used/total : undefined;
+    }
+    if(path.startsWith('window.')) {
+      const key=path.slice(7);
+      return window.nzxt?.v1?.[key];
+    }
+    return path.split('.').reduce((v,k)=>v==null?undefined:v[k],obj);
+  }
+  function format(value,kind){
+    if(value === undefined || value === null || (typeof value==='number' && !Number.isFinite(value))) return '--';
+    if(kind==='text') return String(value);
+    if(kind==='percent') { let n=Number(value); if(n>=0 && n<=1)n*=100; return Math.round(n)+'%'; }
+    if(kind==='temperature') return Math.round(Number(value))+'°C';
+    if(kind==='mhz') return Math.round(Number(value))+' MHz';
+    if(kind==='rpm') return Math.round(Number(value))+' RPM';
+    if(kind==='watts') return Math.round(Number(value))+' W';
+    if(kind==='mib') return Math.round(Number(value))+' MiB';
+    if(kind==='integer') return String(Math.round(Number(value)));
+    return String(value);
+  }
+  function apply(data){
+    document.querySelectorAll('[data-nzxt-binding]').forEach(el=>{
+      const path=el.getAttribute('data-nzxt-binding');
+      const kind=el.getAttribute('data-nzxt-format')||'text';
+      el.textContent=format(getPath(data,path),kind);
+    });
+  }
+  window.__nzxtApplyBindings=apply;
+  window.nzxt=window.nzxt||{}; window.nzxt.v1=window.nzxt.v1||{};
+  const previous=window.nzxt.v1.onMonitoringDataUpdate;
+  window.nzxt.v1.onMonitoringDataUpdate=function(data){
+    if(typeof previous==='function') previous(data);
+    apply(data);
+  };
+  const isKraken=new URLSearchParams(location.search).get('kraken')==='1';
+  if(!isKraken){
+    const demo={
+      cpus:[{name:'AMD Ryzen 9',manufacturer:'AMD',codeName:'Demo CPU',socket:'AM5',load:.27,numCores:16,numThreads:32,temperature:59,minTemperature:38,maxTemperature:78,frequency:5250,minFrequency:600,maxFrequency:5700,stockFrequency:4200,fanSpeed:1250,minFanSpeed:600,maxFanSpeed:2200,tdp:170,power:82}],
+      gpus:[{name:'GeForce RTX',load:.41,temperature:47,minTemperature:31,maxTemperature:72,frequency:2715,minFrequency:210,maxFrequency:2820,stockFrequency:2505,fanSpeed:980,minFanSpeed:0,maxFanSpeed:3000,power:161}],
+      ram:{totalSize:65536,inUse:23800,modules:[{kind:'DDR5',size:32768,model:'Demo DDR5 Module',frequency:6000,stockFrequency:4800}]},
+      kraken:{liquidTemperature:32}
+    };
+    window.nzxt.v1.width=window.nzxt.v1.width||320;
+    window.nzxt.v1.height=window.nzxt.v1.height||320;
+    window.nzxt.v1.shape=window.nzxt.v1.shape||'circle';
+    window.nzxt.v1.targetFps=window.nzxt.v1.targetFps||30;
+    apply(demo);
+    window.__nzxtEditorDemoData=demo;
+  }
+})();</script><div id="kzResizeOverlay" style="display: none; left: 4.57892px; top: 161.72px; width: 21.9343px; height: 21.9343px;"><div class="kz-resize-handle kz-resize-nw" data-kz-resize-dir="nw" style="left: 0px; top: 0px;"></div><div class="kz-resize-handle kz-resize-n" data-kz-resize-dir="n" style="left: 10.9672px; top: 0px;"></div><div class="kz-resize-handle kz-resize-ne" data-kz-resize-dir="ne" style="left: 21.9343px; top: 0px;"></div><div class="kz-resize-handle kz-resize-e" data-kz-resize-dir="e" style="left: 21.9343px; top: 10.9672px;"></div><div class="kz-resize-handle kz-resize-se" data-kz-resize-dir="se" style="left: 21.9343px; top: 21.9343px;"></div><div class="kz-resize-handle kz-resize-s" data-kz-resize-dir="s" style="left: 10.9672px; top: 21.9343px;"></div><div class="kz-resize-handle kz-resize-sw" data-kz-resize-dir="sw" style="left: 0px; top: 21.9343px;"></div><div class="kz-resize-handle kz-resize-w" data-kz-resize-dir="w" style="left: 0px; top: 10.9672px;"></div><div class="kz-rotate-stem"></div><div class="kz-rotate-handle" title="Drag to rotate"></div></div></body></html>
