@@ -1746,7 +1746,7 @@ document.getElementById('exportHtml').addEventListener('click',()=>{
  kzUpgradeDocumentToCurrent(exportDoc,{forExport:true});
  const html='<!DOCTYPE html>\n'+exportDoc.documentElement.outerHTML;
  const blob=new Blob([html],{type:'text/html'}), url=URL.createObjectURL(blob), a=document.createElement('a');
- a.href=url; const base=(currentFileName||'kraken-z73').replace(/\.html?$/i,''); a.download=base+'-v'+KZ_LAYOUT_SCHEMA_VERSION+'.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+ a.href=url; a.download='index.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 
 
