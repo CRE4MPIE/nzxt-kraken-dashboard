@@ -2,9 +2,9 @@ NZXT WYSIWYG Editor for creating Custom Web Integrations.
 
 Use the Editor to build your own display preview, it loads an example by default or start completely fresh.
 
-Once you have your layout, export the html and host is somewhere like github pages. (index.html)
+Once you have your layout, export the html and host is somewhere like github pages. (index.html) or on your local filesystem.
 
-In NZXT Cam, add a custom web integration and add your url to your file there. e.g.  https://cre4mpie.github.io/nzxt-kraken-dashboard/
+In NZXT Cam, add a custom web integration and add your url to your file there. e.g.  https://cre4mpie.github.io/nzxt-kraken-dashboard/ or file:///C:/Users/CRE4MPIE/Downloads/index.html
 
 Currently tested and working with NZXT Z73 (320x320)
 
